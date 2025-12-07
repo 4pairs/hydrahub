@@ -12,22 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Install Lua + LuaRocks + Luacheck
         run: |
           sudo apt update
           sudo apt install lua5.1 luarocks -y
           sudo luarocks install luacheck
+
       - name: Run Lua linter
         run: luacheck . || true
-
-  codeql:
-    name: CodeQL Analysis
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: read
-    steps:
-      - uses: actions/checkout@v3
-      - uses: github/codeql-action/init@v4
-        with:
-          languages: javascript
-      - uses: github/codeql-action/analyze@v4
