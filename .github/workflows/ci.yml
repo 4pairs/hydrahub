@@ -6,12 +6,26 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   lint:
     name: Lua Linting
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Cache LuaRocks
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.luarocks
+            .luarocks
+          key: luarocks-${{ runner.os }}-${{ hashFiles('**/*.rockspec') }}
+          restore-keys: |
+            luarocks-${{ runner.os }}-
 
       - name: Install Lua + LuaRocks + Luacheck
         run: |
@@ -25,10 +39,13 @@ jobs:
   codeql:
     name: CodeQL Analysis (GitHub Actions Only)
     runs-on: ubuntu-latest
+
     permissions:
       security-events: write
+      contents: read
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: github/codeql-action/init@v4
         with:
