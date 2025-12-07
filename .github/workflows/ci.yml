@@ -26,7 +26,7 @@ jobs:
     name: CodeQL Analysis (GitHub Actions Only)
     runs-on: ubuntu-latest
     permissions:
-      security-events: read
+      security-events: write
     steps:
       - uses: actions/checkout@v3
 
