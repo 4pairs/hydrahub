@@ -7,29 +7,48 @@ on:
     branches: [main]
 
 jobs:
+
   lint:
+    name: Lua Linting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install Lua and Luacheck
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Lua + Luacheck
         run: |
           sudo apt update
           sudo apt install lua5.1 luacheck -y
+
       - name: Run Lua linter
         run: luacheck .
 
   test:
+    name: Lua Unit Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Lua
+        run: |
+          sudo apt update
+          sudo apt install lua5.1 -y
+
       - name: Run unit tests
-        run: lua test_runner.lua
+        run: lua5.1 test_runner.lua
 
   codeql:
+    name: CodeQL Analysis
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: github/codeql-action/init@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
           languages: javascript, python
-      - uses: github/codeql-action/analyze@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
